@@ -36,6 +36,8 @@ public interface WorkerQueueMetaStore {
      */
     Set<String> listAllWorkerQueueIds();
 
+    Set<String> allowedTenantsForQueueId(String queueId);
+
     /**
      * Resolves the Worker Queue ids matching {@code requiredTags} under the given
      * {@code match} strategy, ordered best-first.
@@ -62,6 +64,11 @@ public interface WorkerQueueMetaStore {
 
         @Override
         public Set<String> listAllWorkerQueueIds() {
+            return Set.of();
+        }
+
+        @Override
+        public Set<String> allowedTenantsForQueueId(String queueId) {
             return Set.of();
         }
 
