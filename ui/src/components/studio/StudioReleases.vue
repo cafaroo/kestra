@@ -77,6 +77,7 @@
 
 <script setup lang="ts">
     import {computed, onMounted, ref} from "vue"
+    import {useRoute, useRouter} from "vue-router"
     import {
         KsButton,
         KsCard,
@@ -96,6 +97,8 @@
     import {useStudioControlPlaneStore} from "../../stores/studioControlPlane"
 
     const store = useStudioControlPlaneStore()
+    const route = useRoute()
+    const router = useRouter()
     const targetId = ref("")
     const releaseOpen = ref(false)
     const sourceCommit = ref("")
@@ -104,13 +107,17 @@
 
     onMounted(async () => {
         const targets = await store.loadTargets()
-        targetId.value = targets[0]?.id ?? ""
+        const queryTarget = typeof route.query.target === "string" ? route.query.target : undefined
+        targetId.value = targets.some((target) => target.id === queryTarget)
+            ? queryTarget!
+            : (targets[0]?.id ?? "")
         await loadTarget()
     })
 
     async function loadTarget() {
         if (!targetId.value) return
         await store.loadReleases(targetId.value)
+        await router.replace({query: {...route.query, target: targetId.value}})
     }
 
     async function prepare() {
