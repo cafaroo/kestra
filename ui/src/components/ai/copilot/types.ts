@@ -28,7 +28,7 @@ import type {
 
 /** The artefact a turn is bound to / focused on. */
 export interface ScopeBinding {
-    kind: "FLOW" | "NAMESPACE" | "EXECUTION" | "DASHBOARD" | "APP" | "TEST" | "BLUEPRINT" | "PLUGIN"
+    kind: "FLOW" | "NAMESPACE" | "EXECUTION" | "DASHBOARD" | "APP" | "TEST" | "BLUEPRINT" | "PLUGIN" | "INFRASTRUCTURE" | "RELEASE_TARGET"
     namespace?: string | null
     flowId?: string | null
     executionId?: string | null
@@ -37,6 +37,8 @@ export interface ScopeBinding {
     testId?: string | null
     blueprintId?: string | null
     pluginId?: string | null
+    targetId?: string | null
+    nodeId?: string | null
 }
 
 /**
