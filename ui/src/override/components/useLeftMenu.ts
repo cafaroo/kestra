@@ -61,6 +61,9 @@ export function useLeftMenu() {
 
     const {t} = useI18n({useScope: "global"})
     const miscStore = useMiscStore()
+    const studioEnabled = computed(() =>
+        Boolean((miscStore.configs as {isStudioEnabled?: boolean} | undefined)?.isStudioEnabled),
+    )
     const definitionOnly = computed(() =>
         Boolean((miscStore.configs as {isStudioDefinitionOnly?: boolean} | undefined)?.isStudioDefinitionOnly),
     )
@@ -102,7 +105,32 @@ export function useLeftMenu() {
                 title: "Workspace",
                 child: [
                     {
+                        id: "studio-overview",
+                        hidden: !studioEnabled.value,
+                        title: t("overview"),
+                        routes: routeStartWith("studio/overview"),
+                        href: {name: "studio/overview"},
+                        icon: {element: ChartLineVariant},
+                    },
+                    {
+                        id: "studio-infrastructure",
+                        hidden: !studioEnabled.value,
+                        title: t("setup.survey.use_case_infrastructure"),
+                        routes: routeStartWith("studio/infrastructure"),
+                        href: {name: "studio/infrastructure"},
+                        icon: {element: Monitor},
+                    },
+                    {
+                        id: "studio-releases",
+                        hidden: !studioEnabled.value,
+                        title: t("promote.label"),
+                        routes: routeStartWith("studio/releases"),
+                        href: {name: "studio/releases"},
+                        icon: {element: RocketLaunchOutline},
+                    },
+                    {
                         id: "dashboards",
+                        hidden: definitionOnly.value,
                         title: t("dashboards.labels.plural"),
                         routes: routeStartWith("home"),
                         href: {
