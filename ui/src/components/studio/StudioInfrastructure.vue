@@ -22,8 +22,8 @@
                     :nodesDraggable="false"
                     :nodesConnectable="false"
                     :fitViewOnInit="true"
-                    @nodeClick="({node}) => selectedId = node.id"
-                    @paneClick="selectedId = undefined"
+                    @nodeClick="({node}) => selectNode(node.id)"
+                    @paneClick="selectNode(undefined)"
                 >
                     <Background :gap="24" :size="1" />
                     <template #node-infrastructure="{data}">
@@ -66,6 +66,7 @@
 
 <script setup lang="ts">
     import {computed, onMounted, ref} from "vue"
+    import {useRoute, useRouter} from "vue-router"
     import {VueFlow, type Edge, type Node} from "@vue-flow/core"
     import {Background} from "@vue-flow/background"
     import {
@@ -81,18 +82,44 @@
     import {useStudioControlPlaneStore} from "../../stores/studioControlPlane"
 
     const store = useStudioControlPlaneStore()
+    const route = useRoute()
+    const router = useRouter()
     const targetId = ref("")
     const selectedId = ref<string>()
 
     onMounted(async () => {
         const targets = await store.loadTargets()
-        targetId.value = targets[0]?.id ?? ""
-        await load()
+        const queryTarget = typeof route.query.target === "string" ? route.query.target : undefined
+        targetId.value = targets.some((target) => target.id === queryTarget)
+            ? queryTarget!
+            : (targets[0]?.id ?? "")
+        const queryNode = typeof route.query.node === "string" ? route.query.node : undefined
+        selectedId.value = queryNode
+        await load(false)
     })
 
-    async function load() {
-        selectedId.value = undefined
-        if (targetId.value) await store.loadInfrastructure(targetId.value)
+    async function load(clearNode = true) {
+        if (clearNode) selectedId.value = undefined
+        if (!targetId.value) return
+        await store.loadInfrastructure(targetId.value)
+        await router.replace({
+            query: {
+                ...route.query,
+                target: targetId.value,
+                node: selectedId.value,
+            },
+        })
+    }
+
+    async function selectNode(id: string | undefined) {
+        selectedId.value = id
+        await router.replace({
+            query: {
+                ...route.query,
+                target: targetId.value || undefined,
+                node: id,
+            },
+        })
     }
 
     const definition = computed(() => store.infrastructure)
