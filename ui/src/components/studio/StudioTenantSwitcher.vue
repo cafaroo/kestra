@@ -82,7 +82,7 @@
         if (name === "studio/overview" || name === "studio/infrastructure" || name === "studio/releases") {
             return {name, params: {tenant: tenantId}, query: route.query}
         }
-        return {name: "home", params: {tenant: tenantId}}
+        return {name: "studio/overview", params: {tenant: tenantId}}
     }
 
     async function switchTenant(command: string | number | object): Promise<void> {
