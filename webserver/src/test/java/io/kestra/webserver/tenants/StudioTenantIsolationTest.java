@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
 @KestraTest
+@Property(name = "kestra.server-type", value = "WEBSERVER")
 @Property(name = "millblad.studio.enabled", value = "true")
 @Property(name = "millblad.studio.definition-only", value = "true")
 class StudioTenantIsolationTest {
