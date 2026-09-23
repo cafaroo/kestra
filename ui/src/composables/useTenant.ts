@@ -3,7 +3,7 @@ import type {App} from "vue"
 import {getActiveTenant, setActiveTenant} from "override/utils/route"
 
 export function tenantGuard(_router: Router, to: RouteLocationNormalized, from: RouteLocationNormalized): boolean | RouteLocationRaw {
-    if (to.meta?.anonymous === true) {
+    if (to.meta?.anonymous === true || to.meta?.tenantless === true) {
         return true
     }
 
