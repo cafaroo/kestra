@@ -170,12 +170,15 @@ It is informational, not a warning. On pages where a user might expect runtime d
 | Lists and history | `KsDataTable` |
 | Visual tokens | `ks-tokens.scss` + theme files |
 
-## Documents
+## Architecture package
 
+- [Target architecture](ARCHITECTURE.md)
+- [Implementation plan](IMPLEMENTATION_PLAN.md)
+- [Security and data boundaries](SECURITY_AND_DATA_BOUNDARIES.md)
+- [AI integration](AI_INTEGRATION.md)
 - [Design primitives](DESIGN_PRIMITIVES.md)
 - [UX and routes](UX_AND_ROUTES.md)
-- [Implementation map](IMPLEMENTATION_MAP.md)
-- [AI integration](AI_INTEGRATION.md)
+- [UI implementation map](IMPLEMENTATION_MAP.md)
 
 ## Non-goals
 
