@@ -130,6 +130,23 @@ class McpServerAuthenticationFilterTest {
     }
 
     @Test
+    void shouldAllowThroughWhenServerIdIsPercentEncodedForPublicServer() {
+        // Given — request.getPath() is raw, while McpToolController resolves the same @PathVariable
+        // decoded; percent-encoding one character of the id must not make the filter miss the server
+        // and treat the request as non-MCP, which would let AuthenticationFilter demand Basic auth for
+        // what is, once decoded, a PUBLIC server that requires none.
+        String serverId = saveServer(false, McpServer.ServerType.PUBLIC);
+
+        // When — no credentials, one character of the id percent-encoded
+        HttpResponse<?> response = client.toBlocking().exchange(
+            mcpPost(percentEncodeFirstChar(serverId), INITIALIZE_REQUEST), Map.class
+        );
+
+        // Then
+        assertThat(response.code()).isEqualTo(HttpStatus.OK.getCode());
+    }
+
+    @Test
     void shouldReturnUnauthorizedWhenNoCredentialsProvidedForDisabledPrivateServer() {
         // Given
         String serverId = saveServer(true, McpServer.ServerType.PRIVATE);
@@ -258,6 +275,11 @@ class McpServerAuthenticationFilterTest {
             Thread.sleep(100);
         }
         assertThat(actual).as("cache-invalidation did not propagate within 5s").isEqualTo(expectedStatus);
+    }
+
+    /** Percent-encodes the id's first character, e.g. {@code "server-abc"} -> {@code "%73erver-abc"}. */
+    private static String percentEncodeFirstChar(String serverId) {
+        return "%%%02X%s".formatted((int) serverId.charAt(0), serverId.substring(1));
     }
 
     private String saveServer(boolean disabled, McpServer.ServerType serverType) {
