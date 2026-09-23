@@ -122,7 +122,7 @@ const routes: KestraRouteRecord[] = [
     {name: "admin/quotas/list", path: "/:tenant?/admin/quotas", component: () => import("../components/demo/Quotas.vue")},
     {name: "admin/policies", path: "/:tenant?/admin/policies", component: () => import("../components/demo/Policies.vue")},
     {name: "admin/instance", path: "/:tenant?/admin/instance", component: () => import("../components/demo/Instance.vue")},
-    {name: "promote/targets", path: "/:tenant?/promote/targets", component: () => import("../components/demo/Promote.vue")},
+    {name: "promote/targets", path: "/:tenant?/promote/targets", component: () => import("../millblad/promote/PromotionTargetsPage.vue")},
 ]
 
 export default routes

@@ -71,9 +71,8 @@ export const FLOW_TAB_ROUTES: RouteRecordRaw[] = [
     {
         name: `${FLOW_PARENT_ROUTE}/promote`,
         path: "promote",
-        component: () => import("../demo/Promote.vue"),
-        props: {embed: true},
-        meta: {tab: "promote", title: "promote.label", locked: true},
+        component: () => import("../../millblad/promote/FlowPromoteView.vue"),
+        meta: {tab: "promote", title: "promote.label"},
     },
     {
         name: `${FLOW_PARENT_ROUTE}/revisions`,
