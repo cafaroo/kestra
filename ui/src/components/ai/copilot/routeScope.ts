@@ -9,7 +9,7 @@ import {NAMESPACE_PARENT_ROUTE} from "../../../utils/namespaceTabRoutes"
  *   - `noun`: the bare, lowercase type word ("flow", "namespace", …) under `ai.copilot.contextNoun`,
  *     used by the transcript's context-change notices ("Added {type} {id} to context.").
  */
-export const CONTEXT_PART_I18N: Record<ContextPart, {keypath: string; slot: string; noun: string}> = {
+export const CONTEXT_PART_I18N: Partial<Record<ContextPart, {keypath: string; slot: string; noun: string}>> = {
     flowId: {keypath: "ai.copilot.context.flow", slot: "flow", noun: "ai.copilot.contextNoun.flow"},
     executionId: {keypath: "ai.copilot.context.execution", slot: "id", noun: "ai.copilot.contextNoun.execution"},
     dashboardId: {keypath: "ai.copilot.context.dashboard", slot: "dashboard", noun: "ai.copilot.contextNoun.dashboard"},
@@ -21,7 +21,7 @@ export const CONTEXT_PART_I18N: Record<ContextPart, {keypath: string; slot: stri
 }
 
 /** The primary resource field for each scope kind — the pill shown first, and the one a navigation announces. */
-export const CONTEXT_PRIMARY: Record<ScopeBinding["kind"], ContextPart> = {
+export const CONTEXT_PRIMARY: Partial<Record<ScopeBinding["kind"], ContextPart>> = {
     FLOW: "flowId",
     EXECUTION: "executionId",
     DASHBOARD: "dashboardId",
@@ -36,13 +36,18 @@ export const CONTEXT_PRIMARY: Record<ScopeBinding["kind"], ContextPart> = {
 interface RouteLike {
     name?: string | symbol | null
     params?: Record<string, string | string[]>
+    query?: Record<string, string | string[] | null | undefined>
 }
 
 /** First value of a route param (params can be string | string[]); undefined when absent/empty. */
-function param(params: RouteLike["params"], key: string): string | undefined {
-    const value = params?.[key]
+function valueOf(values: Record<string, string | string[] | null | undefined> | undefined, key: string): string | undefined {
+    const value = values?.[key]
     const first = Array.isArray(value) ? value[0] : value
     return first || undefined
+}
+
+function param(params: RouteLike["params"], key: string): string | undefined {
+    return valueOf(params, key)
 }
 
 /**
@@ -56,6 +61,14 @@ function param(params: RouteLike["params"], key: string): string | undefined {
 export function scopeFromRoute(route: RouteLike | undefined | null): ScopeBinding | null {
     const name = typeof route?.name === "string" ? route.name : ""
     const params = route?.params
+    const query = route?.query
+
+    if (name === "studio/infrastructure") {
+        return {kind: "INFRASTRUCTURE", targetId: valueOf(query, "target"), nodeId: valueOf(query, "node")}
+    }
+    if (name === "studio/releases") {
+        return {kind: "RELEASE_TARGET", targetId: valueOf(query, "target")}
+    }
 
     if (name === EXECUTION_PARENT_ROUTE || name.startsWith(`${EXECUTION_PARENT_ROUTE}/`)) {
         return {
@@ -111,6 +124,8 @@ export function scopeToContext(scope: ScopeBinding | null | undefined, flowSourc
     if (scope?.testId) currentView.testId = scope.testId
     if (scope?.blueprintId) currentView.blueprintId = scope.blueprintId
     if (scope?.pluginId) currentView.pluginId = scope.pluginId
+    if (scope?.targetId) currentView.targetId = scope.targetId
+    if (scope?.nodeId) currentView.nodeId = scope.nodeId
     if (flowSource) currentView.flowSource = flowSource
     return {currentView}
 }
