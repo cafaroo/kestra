@@ -1,10 +1,12 @@
 package io.kestra.executor;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -18,6 +20,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import com.google.common.collect.ImmutableMap;
 
 import io.kestra.core.context.TestRunContextFactory;
+import io.kestra.core.executor.WorkerJobRunningStateStore;
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.metrics.MetricRegistry;
 import io.kestra.core.models.conditions.ConditionContext;
@@ -32,11 +35,15 @@ import io.kestra.core.models.tasks.WorkerSelector;
 import io.kestra.core.queues.DispatchQueueInterface;
 import io.kestra.core.queues.KeyedDispatchQueueInterface;
 import io.kestra.core.queues.VNodeDispatchQueueInterface;
+import io.kestra.core.repositories.ServiceInstanceRepositoryInterface;
+import io.kestra.core.runners.NoTransactionContext;
 import io.kestra.core.runners.Worker;
+import io.kestra.core.runners.WorkerInstance;
 import io.kestra.core.runners.WorkerJobEvent;
 import io.kestra.core.runners.WorkerTask;
 import io.kestra.core.runners.WorkerTaskData;
 import io.kestra.core.runners.WorkerTaskResult;
+import io.kestra.core.runners.WorkerTaskRunning;
 import io.kestra.core.runners.WorkerTrigger;
 import io.kestra.core.runners.WorkerTriggerData;
 import io.kestra.core.scheduler.events.TriggerEvent;
@@ -44,15 +51,22 @@ import io.kestra.core.scheduler.events.TriggerReceived;
 import io.kestra.core.scheduler.events.TriggerWorkerLost;
 import io.kestra.core.scheduler.model.TriggerState;
 import io.kestra.core.server.ServerConfig;
+import io.kestra.core.server.ServerInstance;
+import io.kestra.core.server.Service;
+import io.kestra.core.server.ServiceInstance;
 import io.kestra.core.server.ServiceStateChangeEvent;
+import io.kestra.core.server.ServiceType;
+import io.kestra.core.server.WorkerTaskRestartStrategy;
 import io.kestra.core.services.IgnoreExecutionService;
 import io.kestra.core.services.MaintenanceService;
 import io.kestra.core.services.WorkerQueueService;
 import io.kestra.core.tasks.test.SleepTrigger;
+import io.kestra.core.utils.Await;
 import io.kestra.core.utils.CountDownLatchTask;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
 import io.kestra.core.worker.models.WorkerTriggerResult;
+import io.kestra.plugin.core.log.Log;
 import io.kestra.worker.WorkerAgent;
 import io.kestra.worker.WorkerJobExecutor;
 import io.kestra.worker.fetchers.WorkerJobFetcher;
@@ -72,6 +86,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 public abstract class AbstractServiceLivenessCoordinatorTest {
 
     public static final String WORKER_QUEUE_UID = "worker-queue-id";
+
+    private static final String ORPHAN_WORKER_QUEUE_ID = "orphan-worker-queue-id";
 
     @Inject
     private ApplicationContext applicationContext;
@@ -93,6 +109,12 @@ public abstract class AbstractServiceLivenessCoordinatorTest {
 
     @Inject
     private IgnoreExecutionService ignoreExecutionService;
+
+    @Inject
+    private ServiceInstanceRepositoryInterface serviceInstanceRepository;
+
+    @Inject
+    private WorkerJobRunningStateStore workerJobRunningStateStore;
 
     @BeforeAll
     void init() {
@@ -258,6 +280,104 @@ public abstract class AbstractServiceLivenessCoordinatorTest {
         // THEN - the scheduler is notified instead of the job being re-emitted to a worker.
         assertThat(lostLatch.await(30, TimeUnit.SECONDS)).isTrue();
         newWorker.close();
+    }
+
+    @Test
+    void shouldResubmitOrphanedWorkerJobOnceWhenWorkerInstanceIsInactive() throws Exception {
+        // Given a job left in the running state store by a worker the liveness state machine is done
+        // with — the controller dispatched it but the worker never ran it — alongside one held by a
+        // worker that is still running. Both are routed to a Worker Queue no worker serves, so the
+        // resubmitted job stays in the queue instead of being picked up by another test's worker.
+        ServiceInstance inactive = saveWorkerInstance(Service.ServiceState.INACTIVE);
+        ServiceInstance running = saveWorkerInstance(Service.ServiceState.RUNNING);
+
+        WorkerTaskRunning orphaned = workerTaskRunning(inactive.uid());
+        WorkerTaskRunning stillOwned = workerTaskRunning(running.uid());
+        workerJobRunningStateStore.save(NoTransactionContext.INSTANCE, orphaned);
+        workerJobRunningStateStore.save(NoTransactionContext.INSTANCE, stillOwned);
+
+        List<String> resubmitted = Collections.synchronizedList(new ArrayList<>());
+        workerJobEventQueue.addListener(event -> resubmitted.add(event.job().uid()));
+
+        // When the coordinator sweeps — repeatedly, because a freshly saved instance is not
+        // immediately searchable on every backend.
+        Await.until(
+            () ->
+            {
+                jdbcServiceLivenessHandler.handleAllOrphanedWorkerJobs();
+                return resubmitted.contains(orphaned.uid());
+            },
+            Duration.ofMillis(200),
+            Duration.ofSeconds(30)
+        );
+        jdbcServiceLivenessHandler.handleAllOrphanedWorkerJobs();
+
+        // Then the entry is gone, so the following sweeps do not re-emit it, and the job of the
+        // still-running worker is left for that worker to finish.
+        assertThat(resubmitted.stream().filter(orphaned.uid()::equals)).hasSize(1);
+        assertThat(resubmitted).doesNotContain(stillOwned.uid());
+    }
+
+    @Test
+    void shouldNotResubmitOrphanedWorkerJobWhenTheWorkerRestartStrategyIsNever() {
+        // Given an inactive worker configured never to have its tasks restarted — the setting that
+        // exists to keep a non-idempotent task from running twice.
+        ServiceInstance inactive = saveWorkerInstance(Service.ServiceState.INACTIVE, WorkerTaskRestartStrategy.NEVER);
+        WorkerTaskRunning orphaned = workerTaskRunning(inactive.uid());
+        workerJobRunningStateStore.save(NoTransactionContext.INSTANCE, orphaned);
+
+        List<String> resubmitted = Collections.synchronizedList(new ArrayList<>());
+        workerJobEventQueue.addListener(event -> resubmitted.add(event.job().uid()));
+
+        // When
+        jdbcServiceLivenessHandler.handleAllOrphanedWorkerJobs();
+        jdbcServiceLivenessHandler.handleAllOrphanedWorkerJobs();
+
+        // Then
+        assertThat(resubmitted).doesNotContain(orphaned.uid());
+    }
+
+    private ServiceInstance saveWorkerInstance(Service.ServiceState state) {
+        return saveWorkerInstance(state, WorkerTaskRestartStrategy.AFTER_TERMINATION_GRACE_PERIOD);
+    }
+
+    private ServiceInstance saveWorkerInstance(Service.ServiceState state, WorkerTaskRestartStrategy restartStrategy) {
+        return serviceInstanceRepository.save(
+            new ServiceInstance(
+                IdUtils.create(),
+                ServiceType.WORKER,
+                state,
+                new ServerInstance(ServerInstance.Type.STANDALONE, "unit-test", "localhost", null, null),
+                Instant.now(),
+                Instant.now(),
+                List.of(),
+                // Liveness disabled: this instance has no process behind it, and letting the
+                // coordinator declare it non-responding would resubmit its job from the unclean
+                // path and defeat what this test asserts.
+                new ServerConfig(Duration.ofSeconds(1), restartStrategy, new ServerConfig.Liveness(false, Duration.ofSeconds(1), Duration.ofSeconds(3), Duration.ZERO, Duration.ofSeconds(1)), null, null, null),
+                Map.of(),
+                Set.of(),
+                0L
+            )
+        );
+    }
+
+    private static WorkerTaskRunning workerTaskRunning(String workerUid) {
+        return WorkerTaskRunning.builder()
+            .workerInstance(new WorkerInstance(workerUid, ORPHAN_WORKER_QUEUE_ID))
+            .taskRun(
+                TaskRun.builder()
+                    .id(IdUtils.create())
+                    .executionId(IdUtils.create())
+                    .namespace("io.kestra.unittest")
+                    .flowId("orphaned-worker-job")
+                    .taskId("log")
+                    .state(new State().withState(State.Type.SUBMITTED))
+                    .build()
+            )
+            .task(Log.builder().id("log").type(Log.class.getName()).message("test").build())
+            .data(new WorkerTaskData(Map.of(), null))
+            .build();
     }
 
     @MockBean(WorkerQueueService.class)
