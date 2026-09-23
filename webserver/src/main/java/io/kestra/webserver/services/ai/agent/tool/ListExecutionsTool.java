@@ -3,6 +3,7 @@ package io.kestra.webserver.services.ai.agent.tool;
 import java.time.Duration;
 import java.util.List;
 
+import io.kestra.core.ai.agent.models.AgentToolDomain;
 import io.kestra.core.ai.agent.models.AgentToolFamily;
 import io.kestra.core.ai.agent.models.AgentWritePolicy;
 import io.kestra.core.models.QueryFilter;
@@ -29,6 +30,11 @@ public class ListExecutionsTool implements AiPlatformTool {
     @Inject
     public ListExecutionsTool(final ExecutionRepositoryInterface executionRepository) {
         this.executionRepository = executionRepository;
+    }
+
+    @Override
+    public AgentToolDomain domain() {
+        return AgentToolDomain.RUNTIME;
     }
 
     @Override
