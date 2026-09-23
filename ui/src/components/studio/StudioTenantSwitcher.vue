@@ -23,6 +23,9 @@
                     </span>
                     <Check v-if="tenant.id === currentTenant.id" :size="16" />
                 </KsDropdownItem>
+                <KsDropdownItem command="__manage_tenants__" divided>
+                    {{ $t("tenant.names") }}
+                </KsDropdownItem>
             </KsDropdownMenu>
         </template>
     </KsDropdown>
@@ -83,7 +86,12 @@
     }
 
     async function switchTenant(command: string | number | object): Promise<void> {
-        if (typeof command !== "string" || command === routeTenant.value) return
+        if (typeof command !== "string") return
+        if (command === "__manage_tenants__") {
+            await router.push({name: "studio/tenants"})
+            return
+        }
+        if (command === routeTenant.value) return
         tenantStore.remember(command)
         setActiveTenant(command)
         await router.push(safeTarget(command))
