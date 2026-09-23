@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs>
+  <style>
+    .bg{fill:#f8f8fa}.surface{fill:#fff}.border{stroke:#e8e8ed;stroke-width:1}.strong{stroke:#d7d7df;stroke-width:1}
+    .sidebar{fill:#fff}.muted{fill:#73737f}.dim{fill:#9695a0}.text{fill:#202027}.link{fill:#6a38f2}
+    .primary{fill:#f0ebff;stroke:#9b7bff;stroke-width:1}.info{fill:#edf5ff;stroke:#8bb8ff;stroke-width:1}
+    .success{fill:#ecfbf5;stroke:#61cba4;stroke-width:1}.warning{fill:#fff4ea;stroke:#f5b37d;stroke-width:1}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.sans{font-family:Inter,system-ui,-apple-system,sans-serif}
+    .h1{font-size:26px;font-weight:650}.h2{font-size:17px;font-weight:650}.body{font-size:14px}.small{font-size:12px}.tiny{font-size:11px}
+  </style>
+  <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#3a1d6d" flood-opacity=".06"/></filter>
+</defs>
+<rect class="bg" width="1600" height="1000"/>
+<rect class="sidebar border" x="0" y="0" width="260" height="1000"/>
+<text class="sans text h2" x="24" y="38">Kestra</text>
+<rect class="surface strong" x="16" y="62" width="228" height="70" rx="10"/>
+<rect class="primary" x="28" y="78" width="38" height="38" rx="9"/>
+<text class="sans link body" x="38" y="102" font-weight="700">KV</text>
+<text class="sans text body" x="78" y="92" font-weight="650">Kviberggruppen</text>
+<text class="mono muted tiny" x="78" y="113">kviberg</text>
+<text class="sans muted body" x="219" y="101">⌄</text>
+<text class="sans dim tiny" x="24" y="174" font-weight="700" letter-spacing="1.2">STUDIO</text>
+<rect class="primary" x="12" y="190" width="236" height="40" rx="7"/>
+<circle cx="31" cy="210" r="5" fill="#6a38f2"/>
+<text class="sans text body" x="48" y="215" font-weight="600">Overview</text>
+<text class="sans muted body" x="48" y="260">Infrastructure</text>
+<text class="sans muted body" x="48" y="300">Releases</text>
+<text class="sans dim tiny" x="24" y="348" font-weight="700" letter-spacing="1.2">DEFINITIONS</text>
+<text class="sans muted body" x="48" y="387">Flows</text>
+<text class="sans muted body" x="48" y="427">Namespaces</text>
+<text class="sans muted body" x="48" y="467">Blueprints</text>
+<text class="sans muted body" x="48" y="507">Plugins</text>
+<text class="sans dim tiny" x="24" y="556" font-weight="700" letter-spacing="1.2">ADMINISTRATION</text>
+<text class="sans muted body" x="48" y="595">Tenant settings</text>
+<line class="border" x1="16" y1="924" x2="244" y2="924"/>
+<text class="sans muted small" x="24" y="956">Definitions only</text>
+<circle cx="224" cy="951" r="5" fill="#2da97c"/>
+<rect class="surface border" x="260" y="0" width="1340" height="60"/>
+<text class="sans text h2" x="286" y="37">Kviberggruppen / Overview</text>
+<rect class="info" x="550" y="17" width="190" height="28" rx="14"/>
+<text class="sans body" x="570" y="36" fill="#2f66b6" font-weight="650">STUDIO · DEFINITIONS ONLY</text>
+<rect class="surface strong" x="1160" y="13" width="290" height="34" rx="8"/>
+<text class="sans dim body" x="1180" y="35">Search definitions…</text>
+<circle cx="1515" cy="30" r="17" fill="#f0f0f4"/>
+<text class="sans muted body" x="1510" y="35">⋯</text>
+<text class="sans text h1" x="306" y="122">Kviberggruppen</text>
+<text class="mono muted body" x="306" y="149">tenant: kviberg</text>
+<rect class="success" x="448" y="128" width="76" height="24" rx="12"/>
+<text class="sans small" x="465" y="145" fill="#16865f" font-weight="700">ACTIVE</text>
+<text class="sans muted body" x="306" y="186">Central definition plane for customer automation, infrastructure and releases.</text>
+<g filter="url(#shadow)">
+<rect class="surface border" x="306" y="225" width="292" height="192" rx="12"/>
+<rect class="surface border" x="618" y="225" width="292" height="192" rx="12"/>
+<rect class="surface border" x="930" y="225" width="364" height="192" rx="12"/>
+</g>
+<text class="sans text h2" x="330" y="260">Definitions</text>
+<text class="sans muted small" x="330" y="284">Authored in Central Studio</text>
+<text class="sans text h1" x="330" y="334">48</text><text class="sans muted body" x="379" y="334">flows</text>
+<text class="sans text h1" x="330" y="380">6</text><text class="sans muted body" x="361" y="380">namespaces</text>
+<rect class="warning" x="463" y="349" width="106" height="26" rx="13"/>
+<text class="sans small" x="482" y="367" fill="#b35b20" font-weight="650">3 changed</text>
+<text class="sans text h2" x="642" y="260">Source</text>
+<text class="sans muted small" x="642" y="284">Forgejo · kviberg</text>
+<text class="mono text body" x="642" y="329" font-weight="700">91fb42c</text>
+<text class="sans text body" x="642" y="357">feat(painting): validate journal rows</text>
+<text class="mono muted small" x="642" y="390">main · 23 Sep 2026 11:42</text>
+<text class="sans text h2" x="954" y="260">Release targets</text>
+<text class="sans muted small" x="954" y="284">Observed deployment metadata only</text>
+<rect x="954" y="305" width="316" height="42" rx="7" fill="#fafafd" stroke="#ececf1"/>
+<text class="sans text body" x="970" y="331" font-weight="650">Test</text>
+<circle cx="1051" cy="326" r="5" fill="#2da97c"/>
+<text class="mono muted small" x="1080" y="331">91fb42c</text>
+<text class="sans link small" x="1205" y="331">Open</text>
+<rect x="954" y="357" width="316" height="42" rx="7" fill="#fafafd" stroke="#ececf1"/>
+<text class="sans text body" x="970" y="383" font-weight="650">Production</text>
+<circle cx="1051" cy="378" r="5" fill="#e89b53"/>
+<text class="mono muted small" x="1080" y="383">88c413a</text>
+<text class="sans link small" x="1182" y="383">Update available</text>
+<rect class="info" x="306" y="453" width="988" height="116" rx="12"/>
+<circle cx="340" cy="491" r="16" fill="#dcecff"/>
+<text class="sans" x="334" y="497" font-size="18" fill="#2f66b6">◆</text>
+<text class="sans text h2" x="370" y="489">Customer runtime data never lives here</text>
+<text class="sans muted body" x="370" y="516">Executions, logs, operational KV, outputs, customer documents and secret values stay inside Kviberggruppen’s isolated runtime.</text>
+<rect x="1100" y="478" width="164" height="36" rx="8" fill="#fff" stroke="#8bb8ff"/>
+<text class="sans link body" x="1130" y="501" font-weight="650">Open production</text>
+<rect class="surface border" x="306" y="606" width="988" height="300" rx="12"/>
+<text class="sans text h2" x="330" y="643">Recent releases</text>
+<text class="sans muted small" x="330" y="666">Definition and deployment metadata only</text>
+<line class="border" x1="330" y1="692" x2="1270" y2="692"/>
+<text class="sans dim tiny" x="330" y="720">TARGET</text><text class="sans dim tiny" x="500" y="720">COMMIT</text><text class="sans dim tiny" x="670" y="720">STATE</text><text class="sans dim tiny" x="850" y="720">RELEASED</text><text class="sans dim tiny" x="1080" y="720">BY</text>
+<g class="sans body">
+<text class="text" x="330" y="760">Test</text><text class="mono text" x="500" y="760">91fb42c</text><text x="670" y="760" fill="#16865f">Synced</text><text class="muted" x="850" y="760">11:48 today</text><text class="muted" x="1080" y="760">Gustaf</text>
+<line class="border" x1="330" y1="779" x2="1270" y2="779"/>
+<text class="text" x="330" y="814">Production</text><text class="mono text" x="500" y="814">88c413a</text><text x="670" y="814" fill="#16865f">Synced</text><text class="muted" x="850" y="814">22 Sep 16:02</text><text class="muted" x="1080" y="814">Gustaf</text>
+<line class="border" x1="330" y1="833" x2="1270" y2="833"/>
+<text class="text" x="330" y="868">Test</text><text class="mono text" x="500" y="868">88c413a</text><text x="670" y="868" fill="#16865f">Synced</text><text class="muted" x="850" y="868">22 Sep 15:11</text><text class="muted" x="1080" y="868">Gustaf</text>
+</g>
+<text class="sans dim small" x="306" y="958">Millblad Studio concept · Kestra-native shell · light theme</text>
+</svg>
