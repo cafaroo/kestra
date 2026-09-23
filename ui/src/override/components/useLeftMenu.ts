@@ -8,6 +8,7 @@ import type {
 } from "vue-router"
 
 import {useI18n} from "vue-i18n"
+import {useMiscStore} from "override/stores/misc"
 
 // Main icons
 import AiMenuIcon from "../../components/ai/AiMenuIcon.vue"
@@ -59,6 +60,10 @@ export function useLeftMenu() {
     const $router = useRouter()
 
     const {t} = useI18n({useScope: "global"})
+    const miscStore = useMiscStore()
+    const definitionOnly = computed(() =>
+        Boolean((miscStore.configs as {isStudioDefinitionOnly?: boolean} | undefined)?.isStudioDefinitionOnly),
+    )
 
     /**
      * Returns the names of all registered routes whose name starts with the given prefix.
@@ -131,6 +136,7 @@ export function useLeftMenu() {
                     },
                     {
                         id: "executions",
+                        hidden: definitionOnly.value,
                         title: t("executions"),
                         routes: routeStartWith("executions"),
                         href: {
@@ -142,6 +148,7 @@ export function useLeftMenu() {
                     },
                     {
                         id: "logs",
+                        hidden: definitionOnly.value,
                         title: t("logs"),
                         routes: routeStartWith("logs"),
                         href: {
@@ -283,6 +290,7 @@ export function useLeftMenu() {
                     },
                     {
                         id: "kv",
+                        hidden: definitionOnly.value,
                         title: t("kv.name"),
                         routes: routeStartWith("kv"),
                         href: {
@@ -294,6 +302,7 @@ export function useLeftMenu() {
                     },
                     {
                         id: "secrets",
+                        hidden: definitionOnly.value,
                         title: t("secret.names"),
                         routes: routeStartWith("secrets"),
                         href: {
@@ -305,6 +314,7 @@ export function useLeftMenu() {
                     },
                     {
                         id: "triggers",
+                        hidden: definitionOnly.value,
                         title: t("triggers"),
                         routes: routeStartWith("admin/triggers"),
                         href: {
@@ -369,6 +379,7 @@ export function useLeftMenu() {
                     },
                     {
                         id: "concurrency-limits",
+                        hidden: definitionOnly.value,
                         title: t("concurrency limits"),
                         routes: routeStartWith("admin/concurrency-limits"),
                         href: {
