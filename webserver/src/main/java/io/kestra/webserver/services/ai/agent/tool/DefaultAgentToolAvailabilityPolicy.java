@@ -17,7 +17,13 @@ public class DefaultAgentToolAvailabilityPolicy implements AgentToolAvailability
 
     @Override
     public boolean isAvailable(final ToolCatalog.ToolEntry entry, final String tenant) {
-        if (!studioConfiguration.enabled() || !studioConfiguration.definitionOnly()) {
+        if (!studioConfiguration.enabled()) {
+            return entry.domain() != AgentToolDomain.INFRASTRUCTURE
+                && entry.domain() != AgentToolDomain.RELEASE
+                && entry.domain() != AgentToolDomain.TENANT_ADMIN;
+        }
+
+        if (!studioConfiguration.definitionOnly()) {
             return true;
         }
 
