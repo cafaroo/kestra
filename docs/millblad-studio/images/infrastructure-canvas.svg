@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs>
+<style>
+.bg{fill:#f8f8fa}.surface{fill:#fff}.text{fill:#202027}.muted{fill:#73737f}.dim{fill:#9695a0}.link{fill:#6a38f2}
+.border{stroke:#e8e8ed;stroke-width:1}.zone{fill:#fbfbfd;stroke:#cfcfd9;stroke-width:1.3;stroke-dasharray:7 7}
+.zoneStudio{fill:#f5f2ff;stroke:#b49cff}.zoneRuntime{fill:#f7fbfa;stroke:#7fcfb1}.zoneExternal{fill:#f7faff;stroke:#9dbde8}
+.node{fill:#fff;stroke:#dedee6;stroke-width:1}.selected{fill:#fff;stroke:#7c52f4;stroke-width:2}
+.edge{fill:none;stroke:#8b8b98;stroke-width:1.5}.edgePrimary{fill:none;stroke:#7c52f4;stroke-width:2}.edgeGreen{fill:none;stroke:#33a97c;stroke-width:1.6}
+.sans{font-family:Inter,system-ui,-apple-system,sans-serif}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.h1{font-size:21px;font-weight:650}.h2{font-size:15px;font-weight:650}.body{font-size:13px}.small{font-size:11px}.tiny{font-size:10px}
+</style>
+<marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#8b8b98"/></marker>
+<marker id="arrP" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#7c52f4"/></marker>
+<marker id="arrG" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#33a97c"/></marker>
+</defs>
+<rect class="bg" width="1600" height="1000"/>
+<rect class="surface border" x="0" y="0" width="246" height="1000"/>
+<text class="sans text h2" x="22" y="36">Kestra</text>
+<rect class="surface border" x="14" y="60" width="218" height="66" rx="9"/>
+<rect x="26" y="75" width="36" height="36" rx="8" fill="#f0ebff" stroke="#9b7bff"/>
+<text class="sans link body" x="35" y="98" font-weight="700">KV</text>
+<text class="sans text body" x="74" y="88" font-weight="650">Kviberggruppen</text><text class="mono muted tiny" x="74" y="108">kviberg</text><text class="sans muted body" x="211" y="96">⌄</text>
+<text class="sans dim tiny" x="22" y="168" font-weight="700">STUDIO</text><text class="sans muted body" x="46" y="205">Overview</text>
+<rect x="10" y="220" width="226" height="38" rx="7" fill="#f0ebff"/><text class="sans text body" x="46" y="244" font-weight="650">Infrastructure</text>
+<text class="sans muted body" x="46" y="285">Releases</text><text class="sans dim tiny" x="22" y="333" font-weight="700">DEFINITIONS</text><text class="sans muted body" x="46" y="370">Flows</text><text class="sans muted body" x="46" y="410">Namespaces</text>
+<rect class="surface border" x="246" y="0" width="1354" height="60"/>
+<text class="sans text h2" x="274" y="36">Kviberggruppen / Infrastructure</text>
+<rect x="566" y="16" width="182" height="28" rx="14" fill="#edf5ff" stroke="#8bb8ff"/><text class="sans body" x="585" y="35" fill="#2f66b6" font-weight="650">STUDIO · DEFINITIONS ONLY</text>
+<rect x="1095" y="13" width="112" height="34" rx="8" fill="#f0ebff" stroke="#9b7bff"/><text class="sans link body" x="1120" y="35" font-weight="650">Production</text>
+<rect x="1220" y="13" width="112" height="34" rx="8" fill="#fff" stroke="#d7d7df"/><text class="sans text body" x="1248" y="35">Edit topology</text>
+<rect x="1344" y="13" width="112" height="34" rx="8" fill="#6a38f2"/><text class="sans body" x="1375" y="35" fill="#fff" font-weight="650">Release</text>
+<rect x="246" y="60" width="985" height="940" fill="#fbfbfd"/>
+<rect class="surface border" x="270" y="82" width="930" height="48" rx="9"/>
+<rect x="286" y="91" width="88" height="30" rx="7" fill="#f0ebff"/><text class="sans link small" x="304" y="110" font-weight="650">Topology</text>
+<text class="sans muted small" x="397" y="110">Compose</text><text class="sans muted small" x="482" y="110">Networks</text><text class="sans muted small" x="570" y="110">Volumes</text><text class="sans muted small" x="995" y="110">−   +   Fit</text>
+<rect class="zone zoneStudio" x="286" y="170" width="390" height="245" rx="16"/><text class="sans link h2" x="306" y="198">CENTRAL STUDIO</text><text class="sans muted small" x="306" y="218">Definitions only · no customer runtime data</text>
+<rect class="zone zoneRuntime" x="286" y="455" width="705" height="448" rx="16"/><text class="sans h2" x="306" y="484" fill="#16865f">KVIBERG PRODUCTION RUNTIME</text><text class="sans muted small" x="306" y="504">Isolated runtime · real customer data</text>
+<rect class="zone zoneExternal" x="1010" y="455" width="190" height="448" rx="16"/><text class="sans h2" x="1030" y="484" fill="#2f66b6">EXTERNAL</text><text class="sans muted small" x="1030" y="504">Customer systems</text>
+<rect class="node" x="320" y="255" width="150" height="84" rx="10"/><rect x="332" y="268" width="30" height="30" rx="7" fill="#f0ebff"/><text class="sans link body" x="341" y="288">G</text><text class="sans text h2" x="372" y="284">Forgejo</text><text class="mono muted tiny" x="372" y="303">kviberg</text><text class="sans muted small" x="332" y="327">91fb42c · main</text>
+<rect class="node" x="500" y="255" width="145" height="84" rx="10"/><rect x="512" y="268" width="30" height="30" rx="7" fill="#edf5ff"/><text class="sans" x="521" y="288" fill="#2f66b6">⇢</text><text class="sans text h2" x="552" y="284">Release</text><text class="sans muted small" x="552" y="303">desired state</text><text class="mono muted tiny" x="512" y="327">production</text>
+<rect class="node" x="330" y="545" width="168" height="92" rx="10"/><rect x="342" y="560" width="32" height="32" rx="8" fill="#ecfbf5"/><text class="sans" x="351" y="582" fill="#16865f">L</text><text class="sans text h2" x="385" y="575">Runtime LXC</text><text class="sans muted small" x="385" y="595">10.44.x.x</text><circle cx="350" cy="620" r="4" fill="#2da97c"/><text class="sans muted tiny" x="361" y="624">healthy</text>
+<rect class="selected" x="550" y="535" width="184" height="112" rx="10"/><rect x="562" y="550" width="34" height="34" rx="8" fill="#f0ebff"/><text class="sans link body" x="572" y="573" font-weight="700">K</text><text class="sans text h2" x="608" y="568">Kestra runtime</text><text class="sans muted small" x="608" y="588">2.1.x · tenant main</text><line class="border" x1="562" y1="605" x2="722" y2="605"/><text class="mono muted tiny" x="562" y="626">:8080</text><text class="sans" x="676" y="626" font-size="10" fill="#16865f">healthy</text>
+<rect class="node" x="550" y="705" width="184" height="100" rx="10"/><rect x="562" y="720" width="34" height="34" rx="8" fill="#edf5ff"/><text class="sans" x="572" y="743" fill="#2f66b6">DB</text><text class="sans text h2" x="608" y="738">PostgreSQL</text><text class="sans muted small" x="608" y="758">runtime repository</text><text class="mono muted tiny" x="562" y="790">5432 · internal only</text>
+<rect class="node" x="795" y="560" width="158" height="92" rx="10"/><rect x="807" y="574" width="32" height="32" rx="8" fill="#fff4ea"/><text class="sans" x="816" y="596" fill="#b35b20">C</text><text class="sans text h2" x="850" y="590">Compose API</text><text class="sans muted small" x="850" y="610">desired → runtime</text><text class="mono muted tiny" x="807" y="638">local control</text>
+<rect class="node" x="1030" y="560" width="150" height="92" rx="10"/><rect x="1042" y="574" width="32" height="32" rx="8" fill="#edf5ff"/><text class="sans" x="1051" y="596" fill="#2f66b6">S</text><text class="sans text h2" x="1085" y="590">SharePoint</text><text class="sans muted small" x="1085" y="610">Graph connector</text><text class="sans muted tiny" x="1042" y="638">customer system</text>
+<rect class="node" x="1030" y="700" width="150" height="92" rx="10"/><rect x="1042" y="714" width="32" height="32" rx="8" fill="#edf5ff"/><text class="sans" x="1051" y="736" fill="#2f66b6">V</text><text class="sans text h2" x="1085" y="730">Visma</text><text class="sans muted small" x="1085" y="750">MCP / API</text><text class="sans muted tiny" x="1042" y="778">customer system</text>
+<path class="edgePrimary" marker-end="url(#arrP)" d="M470 296 C482 296 488 296 500 296"/><text class="sans link tiny" x="470" y="280">definition</text>
+<path class="edgePrimary" marker-end="url(#arrP)" d="M570 339 C570 410 642 432 642 535"/><text class="sans link tiny" x="590" y="432">release</text>
+<path class="edge" marker-end="url(#arr)" d="M498 590 C520 590 528 590 550 590"/><text class="sans muted tiny" x="503" y="576">network</text>
+<path class="edgeGreen" marker-end="url(#arrG)" d="M642 647 L642 705"/><text class="sans small" x="652" y="681" fill="#16865f">5432</text>
+<path class="edge" marker-end="url(#arr)" d="M734 590 C760 590 770 600 795 604"/><text class="sans muted tiny" x="752" y="576">control</text>
+<path class="edge" marker-end="url(#arr)" d="M734 575 C870 530 915 550 1030 595"/><text class="sans muted tiny" x="875" y="535">HTTPS / Graph</text>
+<path class="edge" marker-end="url(#arr)" d="M734 620 C880 675 918 744 1030 744"/><text class="sans muted tiny" x="872" y="702">API</text>
+<text class="sans h2" x="306" y="881" fill="#16865f">REAL DATA BOUNDARY</text>
+<rect class="surface border" x="1231" y="60" width="369" height="940"/>
+<text class="sans text h1" x="1260" y="108">Kestra runtime</text><circle cx="1530" cy="100" r="5" fill="#2da97c"/><text class="sans small" x="1542" y="105" fill="#16865f">healthy</text><text class="sans muted small" x="1260" y="132">service · production runtime</text>
+<line class="border" x1="1258" y1="158" x2="1570" y2="158"/><text class="sans link body" x="1262" y="191" font-weight="650">General</text><text class="sans muted body" x="1332" y="191">Compose</text><text class="sans muted body" x="1410" y="191">Network</text><text class="sans muted body" x="1490" y="191">Volumes</text><line x1="1260" y1="202" x2="1313" y2="202" stroke="#6a38f2" stroke-width="2"/>
+<text class="sans dim tiny" x="1260" y="244">IMAGE</text><text class="mono text body" x="1260" y="268">kestra/kestra:2.1.x</text><text class="sans dim tiny" x="1260" y="314">TENANT</text><text class="mono text body" x="1260" y="338">main</text>
+<text class="sans dim tiny" x="1260" y="384">NETWORK</text><text class="mono text body" x="1260" y="408">kviberg_backend</text><text class="sans dim tiny" x="1260" y="454">PORTS</text><text class="mono text body" x="1260" y="478">8080/tcp</text>
+<text class="sans dim tiny" x="1260" y="524">DEPLOYED</text><text class="mono text body" x="1260" y="548">91fb42c</text><text class="sans dim tiny" x="1260" y="594">DESIRED</text><text class="mono text body" x="1260" y="618">91fb42c</text>
+<rect x="1260" y="660" width="310" height="74" rx="9" fill="#ecfbf5" stroke="#61cba4"/><text class="sans h2" x="1280" y="688" fill="#16865f">Synced with desired state</text><text class="sans muted small" x="1280" y="711">No pending definition changes.</text>
+<rect x="1260" y="770" width="142" height="36" rx="8" fill="#fff" stroke="#d7d7df"/><text class="sans text body" x="1288" y="793">Open runtime</text><rect x="1414" y="770" width="156" height="36" rx="8" fill="#fff" stroke="#d7d7df"/><text class="sans text body" x="1441" y="793">View compose</text>
+<text class="sans dim small" x="1260" y="944">Secret refs only · values never render in Studio</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs><style>
+.bg{fill:#f8f8fa}.surface{fill:#fff}.text{fill:#202027}.muted{fill:#73737f}.dim{fill:#9695a0}.link{fill:#6a38f2}.border{stroke:#e8e8ed;stroke-width:1}
+.sans{font-family:Inter,system-ui,-apple-system,sans-serif}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.h1{font-size:25px;font-weight:650}.h2{font-size:16px;font-weight:650}.body{font-size:13px}.small{font-size:11px}.tiny{font-size:10px}
+</style></defs>
+<rect class="bg" width="1600" height="1000"/>
+<rect class="surface border" x="0" y="0" width="248" height="1000"/>
+<text class="sans text h2" x="22" y="36">Kestra</text>
+<rect class="surface border" x="14" y="60" width="220" height="66" rx="9"/>
+<rect x="26" y="75" width="36" height="36" rx="8" fill="#f0ebff" stroke="#9b7bff"/>
+<text class="sans link body" x="35" y="98" font-weight="700">KV</text><text class="sans text body" x="74" y="88" font-weight="650">Kviberggruppen</text><text class="mono muted tiny" x="74" y="108">kviberg</text>
+<text class="sans dim tiny" x="22" y="168" font-weight="700">STUDIO</text>
+<text class="sans muted body" x="46" y="205">Overview</text><text class="sans muted body" x="46" y="245">Infrastructure</text>
+<rect x="10" y="260" width="228" height="38" rx="7" fill="#f0ebff"/><text class="sans text body" x="46" y="284" font-weight="650">Releases</text>
+<text class="sans dim tiny" x="22" y="346" font-weight="700">DEFINITIONS</text><text class="sans muted body" x="46" y="383">Flows</text><text class="sans muted body" x="46" y="423">Namespaces</text>
+<rect class="surface border" x="248" y="0" width="1352" height="60"/>
+<text class="sans text h2" x="276" y="36">Kviberggruppen / Releases</text>
+<rect x="516" y="16" width="182" height="28" rx="14" fill="#edf5ff" stroke="#8bb8ff"/><text class="sans body" x="535" y="35" fill="#2f66b6" font-weight="650">STUDIO · DEFINITIONS ONLY</text>
+<rect x="1360" y="13" width="122" height="34" rx="8" fill="#6a38f2"/><text class="sans body" x="1390" y="35" fill="#fff" font-weight="650">New release</text>
+<text class="sans text h1" x="294" y="119">Releases</text>
+<text class="sans muted body" x="294" y="146">Promote immutable definition commits to isolated customer runtimes.</text>
+<rect class="surface border" x="294" y="185" width="952" height="118" rx="12"/>
+<text class="sans text h2" x="320" y="218">Current source</text><text class="sans muted small" x="320" y="241">Forgejo · kviberg / main</text>
+<text class="mono text h2" x="320" y="276">91fb42c</text><text class="sans text body" x="405" y="276">feat(painting): validate journal rows</text>
+<rect x="1100" y="222" width="115" height="34" rx="8" fill="#fff" stroke="#d7d7df"/><text class="sans text body" x="1127" y="244">View commit</text>
+<text class="sans text h2" x="294" y="349">Release targets</text>
+<rect class="surface border" x="294" y="370" width="450" height="240" rx="12"/>
+<text class="sans text h2" x="320" y="404">Test</text><circle cx="370" cy="398" r="5" fill="#2da97c"/><text class="sans small" x="383" y="403" fill="#16865f">healthy</text>
+<text class="sans dim tiny" x="320" y="446">DEPLOYED</text><text class="mono text body" x="320" y="470">91fb42c</text>
+<text class="sans dim tiny" x="500" y="446">DESIRED</text><text class="mono text body" x="500" y="470">91fb42c</text>
+<rect x="320" y="497" width="96" height="25" rx="12" fill="#ecfbf5" stroke="#61cba4"/><text class="sans small" x="341" y="514" fill="#16865f" font-weight="650">SYNCED</text>
+<text class="sans muted small" x="320" y="556">Last release 11:48 today</text><rect x="575" y="540" width="138" height="36" rx="8" fill="#fff" stroke="#d7d7df"/><text class="sans text body" x="603" y="563">Open runtime</text>
+<rect class="surface border" x="770" y="370" width="476" height="240" rx="12"/>
+<text class="sans text h2" x="796" y="404">Production</text><circle cx="888" cy="398" r="5" fill="#e89b53"/><text class="sans small" x="901" y="403" fill="#b35b20">update available</text>
+<text class="sans dim tiny" x="796" y="446">DEPLOYED</text><text class="mono text body" x="796" y="470">88c413a</text>
+<text class="sans dim tiny" x="976" y="446">DESIRED</text><text class="mono text body" x="976" y="470">91fb42c</text>
+<rect x="796" y="497" width="137" height="25" rx="12" fill="#fff4ea" stroke="#f5b37d"/><text class="sans small" x="817" y="514" fill="#b35b20" font-weight="650">UPDATE READY</text>
+<text class="sans muted small" x="796" y="556">Last release 22 Sep 16:02</text><rect x="958" y="540" width="116" height="36" rx="8" fill="#fff" stroke="#d7d7df"/><text class="sans text body" x="985" y="563">Open runtime</text>
+<rect x="1086" y="540" width="130" height="36" rx="8" fill="#6a38f2"/><text class="sans body" x="1111" y="563" fill="#fff" font-weight="650">Release 91fb42c</text>
+<rect x="430" y="636" width="672" height="92" rx="14" fill="#f5f2ff" stroke="#c7b5ff"/>
+<text class="sans link h2" x="456" y="670">Promotion path</text>
+<rect x="602" y="653" width="132" height="46" rx="8" fill="#fff" stroke="#d7d7df"/><text class="sans text body" x="628" y="672" font-weight="650">Test</text><text class="mono muted small" x="622" y="691">91fb42c</text>
+<path d="M744 676 L830 676" stroke="#7c52f4" stroke-width="2"/><path d="M830 676 l-9 -5 v10 z" fill="#7c52f4"/>
+<rect x="842" y="653" width="148" height="46" rx="8" fill="#fff" stroke="#d7d7df"/><text class="sans text body" x="866" y="672" font-weight="650">Production</text><text class="mono muted small" x="870" y="691">88c413a</text>
+<text class="sans muted small" x="456" y="707">Promote the exact validated commit; do not rewrite flow YAML or tenant IDs.</text>
+<rect class="surface border" x="294" y="758" width="952" height="190" rx="12"/>
+<text class="sans text h2" x="320" y="792">Release history</text><line class="border" x1="320" y1="815" x2="1218" y2="815"/>
+<text class="sans dim tiny" x="320" y="840">TARGET</text><text class="sans dim tiny" x="470" y="840">COMMIT</text><text class="sans dim tiny" x="625" y="840">RESULT</text><text class="sans dim tiny" x="800" y="840">WHEN</text><text class="sans dim tiny" x="1010" y="840">SOURCE</text>
+<text class="sans text body" x="320" y="875">Test</text><text class="mono text body" x="470" y="875">91fb42c</text><text class="sans" x="625" y="875" font-size="13" fill="#16865f">Synced</text><text class="sans muted body" x="800" y="875">11:48 today</text><text class="mono muted small" x="1010" y="875">main</text>
+<line class="border" x1="320" y1="895" x2="1218" y2="895"/>
+<text class="sans text body" x="320" y="928">Production</text><text class="mono text body" x="470" y="928">88c413a</text><text class="sans" x="625" y="928" font-size="13" fill="#16865f">Synced</text><text class="sans muted body" x="800" y="928">22 Sep 16:02</text><text class="mono muted small" x="1010" y="928">main</text>
+<text class="sans dim small" x="1290" y="936">No execution payloads shown</text>
+</svg>
