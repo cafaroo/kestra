@@ -7,6 +7,11 @@
         @menu-collapse="onCollapse"
         :class="{overlay: verticalLayout}"
     >
+        <template #header>
+            <div v-if="!collapsed" class="studio-tenant-header">
+                <StudioTenantSwitcher />
+            </div>
+        </template>
         <template #footer>
             <div class="left-menu-footer">
                 <ProductTourItem v-if="!collapsed" />
@@ -26,6 +31,7 @@
     import ProductTourItem from "../../components/onboarding/tour/ProductTourItem.vue"
     import Auth from "override/components/auth/Auth.vue"
     import Environment from "../../components/layout/Environment.vue"
+    import StudioTenantSwitcher from "../../components/studio/StudioTenantSwitcher.vue"
 
 
     import {useLeftMenu} from "override/components/useLeftMenu"
@@ -58,6 +64,11 @@
             transition: all 0.2s ease;
             background-color: transparent;
         }
+    }
+
+    .studio-tenant-header {
+        width: 100%;
+        padding-right: var(--ks-spacing-7);
     }
 
     .left-menu-footer {
