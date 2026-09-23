@@ -84,6 +84,32 @@ class ToolCatalogTest {
         assertThat(result).isEqualTo("overridden:unit");
     }
 
+
+    @Test
+    void shouldDenyDispatchWhenToolIsUnavailableInCurrentInstanceMode() {
+        DocsMcpToolProvider docs = mock(DocsMcpToolProvider.class);
+        when(docs.tools()).thenReturn(Map.of());
+        AgentToolAvailabilityPolicy unavailable = (entry, tenant) -> !"tenant-echo".equals(entry.name());
+        ToolCatalog catalog = new ToolCatalog(
+            List.of(new TestTenantEchoTool()),
+            List.of(),
+            docs,
+            ALLOW_ALL,
+            unavailable
+        );
+
+        ToolExecutionRequest request = ToolExecutionRequest.builder()
+            .id("c1")
+            .name("tenant-echo")
+            .arguments("{}")
+            .build();
+
+        assertThatThrownBy(() -> catalog.dispatch(request, AgentCallContext.Context.ofTenant("unit")))
+            .isInstanceOf(ToolUnavailableException.class)
+            .hasMessageContaining("tenant-echo")
+            .hasMessageContaining("unit");
+    }
+
     @Test
     void shouldThrowWhenToolUnknown() {
         // Given
