@@ -51,6 +51,18 @@ export const useTenantsStore = defineStore("tenants", () => {
         return activeTenants.value[0]?.id
     }
 
+    async function create(id: string, name: string): Promise<StudioTenant> {
+        const response = await client.post<StudioTenant>(`${apiUrlWithoutTenants()}/tenants`, {id, name})
+        await load(true)
+        return response.data
+    }
+
+    async function disable(id: string): Promise<StudioTenant> {
+        const response = await client.post<StudioTenant>(`${apiUrlWithoutTenants()}/tenants/${id}/disable`)
+        await load(true)
+        return response.data
+    }
+
     function remember(id: string): void {
         try {
             localStorage.setItem(ACTIVE_TENANT_STORAGE_KEY, id)
@@ -67,6 +79,8 @@ export const useTenantsStore = defineStore("tenants", () => {
         load,
         find,
         preferredTenantId,
+        create,
+        disable,
         remember,
     }
 })
