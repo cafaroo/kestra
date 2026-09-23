@@ -17,6 +17,9 @@ import io.kestra.core.models.flows.sla.SLAMonitor;
 import io.kestra.core.models.kv.PersistedKvMetadata;
 import io.kestra.core.models.namespaces.files.NamespaceFileMetadata;
 import io.kestra.core.models.tenants.Tenant;
+import io.kestra.core.studio.InfrastructureDefinition;
+import io.kestra.core.studio.ReleaseRecord;
+import io.kestra.core.studio.ReleaseTarget;
 import io.kestra.core.models.topologies.FlowTopology;
 import io.kestra.core.models.triggers.multipleflows.MultipleConditionWindow;
 import io.kestra.core.runners.*;
@@ -97,6 +100,24 @@ public class JdbcTableConfigsFactory {
     @Named("tenants")
     public InstantiableJdbcTableConfig tenants() {
         return new InstantiableJdbcTableConfig("tenants", Tenant.class, "tenants");
+    }
+
+    @Bean
+    @Named("studio_release_targets")
+    public InstantiableJdbcTableConfig studioReleaseTargets() {
+        return new InstantiableJdbcTableConfig("studio_release_targets", ReleaseTarget.class, "studio_release_targets");
+    }
+
+    @Bean
+    @Named("studio_infrastructure")
+    public InstantiableJdbcTableConfig studioInfrastructure() {
+        return new InstantiableJdbcTableConfig("studio_infrastructure", InfrastructureDefinition.class, "studio_infrastructure");
+    }
+
+    @Bean
+    @Named("studio_releases")
+    public InstantiableJdbcTableConfig studioReleases() {
+        return new InstantiableJdbcTableConfig("studio_releases", ReleaseRecord.class, "studio_releases");
     }
 
     @Bean
