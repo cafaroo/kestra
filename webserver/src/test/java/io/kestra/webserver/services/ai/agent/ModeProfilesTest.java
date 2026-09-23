@@ -88,6 +88,32 @@ class ModeProfilesTest {
             .containsExactlyInAnyOrder("read-flow", "search-docs");
     }
 
+
+    @Test
+    void shouldNotAdvertiseToolsUnavailableInCurrentInstanceMode() {
+        List<ToolCatalog.ToolEntry> entries = List.of(
+            entry("read-flow", new TestReadTool()),
+            new ToolCatalog.ToolEntry(
+                "read-execution",
+                ToolSpecification.builder().name("read-execution").description("read-execution").build(),
+                (request, memoryId) -> "ok",
+                AgentToolCall.Kind.PLATFORM,
+                AgentToolFamily.READ,
+                AgentToolDomain.RUNTIME,
+                AgentWritePolicy.AUTO,
+                new TestReadTool()
+            )
+        );
+        AgentToolAvailabilityPolicy definitionsOnly = (entry, tenant) -> entry.domain() != AgentToolDomain.RUNTIME;
+        ToolCatalog catalog = mock(ToolCatalog.class);
+        when(catalog.entries()).thenReturn(entries);
+
+        ModeProfiles.ResolvedProfile profile = new ModeProfiles(catalog, ALLOW_ALL, definitionsOnly)
+            .resolve(AgentMode.ASK, TENANT, null);
+
+        assertThat(profile.allowedToolNames()).containsExactly("read-flow");
+    }
+
     private static ModeProfiles newModeProfiles(final List<ToolCatalog.ToolEntry> entries, final AgentToolPermissionEvaluator evaluator) {
         ToolCatalog catalog = mock(ToolCatalog.class);
         when(catalog.entries()).thenReturn(entries);
