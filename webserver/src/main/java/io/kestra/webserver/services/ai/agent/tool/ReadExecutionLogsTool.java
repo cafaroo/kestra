@@ -3,6 +3,7 @@ package io.kestra.webserver.services.ai.agent.tool;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.kestra.core.ai.agent.models.AgentToolDomain;
 import io.kestra.core.ai.agent.models.AgentToolFamily;
 import io.kestra.core.ai.agent.models.AgentWritePolicy;
 import io.kestra.core.models.QueryFilter;
@@ -26,6 +27,11 @@ public class ReadExecutionLogsTool implements AiPlatformTool {
     @Inject
     public ReadExecutionLogsTool(final LogDataStoreInterface logRepository) {
         this.logRepository = logRepository;
+    }
+
+    @Override
+    public AgentToolDomain domain() {
+        return AgentToolDomain.RUNTIME;
     }
 
     @Override
