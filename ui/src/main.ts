@@ -143,11 +143,19 @@ async function beforeResolve(router: Router, to: RouteLocationNormalized, from: 
             const tenantStore = useTenantsStore()
             await tenantStore.load()
 
+            if (to.meta?.tenantless === true) {
+                return
+            }
+
             const routeTenant = Array.isArray(to.params.tenant) ? to.params.tenant[0] : to.params.tenant
             const active = routeTenant ? tenantStore.activeTenants.find((tenant) => tenant.id === routeTenant) : undefined
 
             if (!active) {
                 const preferred = tenantStore.preferredTenantId()
+                if (!preferred) {
+                    return {name: "studio/tenants"}
+                }
+
                 if (preferred) {
                     tenantStore.remember(preferred)
                     setActiveTenant(preferred)
