@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import io.kestra.core.contexts.configuration.StudioConfiguration;
 import io.kestra.core.contexts.configuration.SystemFlowsConfiguration;
 import io.kestra.core.exceptions.ValidationErrorException;
 import io.kestra.core.models.collectors.ExecutionUsage;
@@ -78,6 +79,9 @@ public class MiscController {
 
     @Inject
     SystemFlowsConfiguration systemFlowsConfiguration;
+
+    @Inject
+    StudioConfiguration studioConfiguration;
 
     @Inject
     CookiesConfiguration cookiesConfiguration;
@@ -164,7 +168,9 @@ public class MiscController {
             .pluginsHash(pluginRegistry.hash())
             .chartDefaultDuration(this.chartDefaultDuration)
             .flowTemplate(this.flowTemplate)
-            .isPluginAutoInstallEnabled(pluginAutoInstallService.isEnabled());
+            .isPluginAutoInstallEnabled(pluginAutoInstallService.isEnabled())
+            .isStudioEnabled(studioConfiguration.enabled())
+            .isStudioDefinitionOnly(studioConfiguration.definitionOnly());
 
         if (this.environmentName != null || this.environmentColor != null) {
             builder.environment(
@@ -375,6 +381,10 @@ public class MiscController {
         Long pluginsHash;
 
         Boolean isPluginAutoInstallEnabled;
+
+        Boolean isStudioEnabled;
+
+        Boolean isStudioDefinitionOnly;
     }
 
     @Value
