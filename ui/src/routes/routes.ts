@@ -16,6 +16,9 @@ const routes: KestraRouteRecord[] = [
 
     {name: "ai",path: "/:tenant?/ai", component: () => import("../components/ai/copilot/CopilotPage.vue")},
     {name: "studio/tenants", path: "/studio/tenants", component: () => import("../components/studio/Tenants.vue"), meta: {tenantless: true}},
+    {name: "studio/overview", path: "/:tenant?/overview", component: () => import("../components/studio/StudioOverview.vue")},
+    {name: "studio/infrastructure", path: "/:tenant?/infrastructure", component: () => import("../components/studio/StudioInfrastructure.vue")},
+    {name: "studio/releases", path: "/:tenant?/releases", component: () => import("../components/studio/StudioReleases.vue")},
 
     //Dashboards
     {
