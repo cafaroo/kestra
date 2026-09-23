@@ -349,9 +349,6 @@ export function useLeftMenu() {
                         icon: {
                             element: RocketLaunchOutline,
                         },
-                        attributes: {
-                            locked: true,
-                        },
                     },
                     {
                         id: "quotas",

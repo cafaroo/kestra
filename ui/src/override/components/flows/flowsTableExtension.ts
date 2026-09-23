@@ -1,5 +1,6 @@
 import type {Component} from "vue"
 import {type ColumnConfig} from "@kestra-io/design-system"
+import FlowDeployStatusCell from "../../../millblad/promote/FlowDeployStatusCell.vue"
 
 export interface FlowsTableFlowRef {
     id: string;
@@ -18,5 +19,15 @@ export interface FlowsTableExtension {
 }
 
 export function useFlowsTableExtension(): FlowsTableExtension {
-    return {columns: []}
+    return {
+        columns: [
+            {
+                label: "Deploy",
+                prop: "millbladPromotion",
+                default: true,
+                description: "Promotion status for the selected Millblad target",
+                cell: FlowDeployStatusCell,
+            },
+        ],
+    }
 }
