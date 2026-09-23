@@ -175,6 +175,7 @@ It is informational, not a warning. On pages where a user might expect runtime d
 - [Design primitives](DESIGN_PRIMITIVES.md)
 - [UX and routes](UX_AND_ROUTES.md)
 - [Implementation map](IMPLEMENTATION_MAP.md)
+- [AI integration](AI_INTEGRATION.md)
 
 ## Non-goals
 
