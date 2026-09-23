@@ -161,14 +161,29 @@ async function beforeResolve(router: Router, to: RouteLocationNormalized, from: 
                     setActiveTenant(preferred)
 
                     const name = typeof to.name === "string" ? to.name : "home"
-                    const safeLists = new Set(["home", "ai", "flows/list", "namespaces/list", "plugins/list"])
+                    if (name === "home") {
+                        return {name: "studio/overview", params: {tenant: preferred}}
+                    }
+
+                    const safeLists = new Set([
+                        "ai",
+                        "flows/list",
+                        "namespaces/list",
+                        "plugins/list",
+                        "studio/overview",
+                        "studio/infrastructure",
+                        "studio/releases",
+                    ])
                     return safeLists.has(name)
                         ? {name, params: {...to.params, tenant: preferred}, query: to.query}
-                        : {name: "home", params: {tenant: preferred}}
+                        : {name: "studio/overview", params: {tenant: preferred}}
                 }
             } else {
                 tenantStore.remember(active.id)
                 setActiveTenant(active.id)
+                if (to.name === "home") {
+                    return {name: "studio/overview", params: {tenant: active.id}}
+                }
             }
         }
     } catch (error) {
