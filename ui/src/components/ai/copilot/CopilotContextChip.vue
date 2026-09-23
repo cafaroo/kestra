@@ -38,13 +38,15 @@
     // scope, whose primary already is the namespace). Absent fields are skipped.
     const pills = computed<Pill[]>(() => {
         const scope = props.scope
-        const parts: ContextPart[] = [CONTEXT_PRIMARY[scope.kind]]
+        const parts: ContextPart[] = []
+        const primary = CONTEXT_PRIMARY[scope.kind]
+        if (primary) parts.push(primary)
         if (!parts.includes("namespace")) parts.push("namespace")
         return parts
-            .filter((part): part is ContextPart => Boolean(scope[part]))
+            .filter((part): part is ContextPart => Boolean(scope[part]) && Boolean(CONTEXT_PART_I18N[part]))
             .map((part) => {
-                const {keypath, slot} = CONTEXT_PART_I18N[part]
-                return {part, value: scope[part] as string, text: splitTranslation(t, keypath, slot)}
+                const metadata = CONTEXT_PART_I18N[part]!
+                return {part, value: scope[part] as string, text: splitTranslation(t, metadata.keypath, metadata.slot)}
             })
     })
 </script>
