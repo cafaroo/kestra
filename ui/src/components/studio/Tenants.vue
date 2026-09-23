@@ -123,7 +123,7 @@
     function openTenant(tenantId: string) {
         tenantStore.remember(tenantId)
         setActiveTenant(tenantId)
-        router.push({name: "home", params: {tenant: tenantId}})
+        router.push({name: "studio/overview", params: {tenant: tenantId}})
     }
 </script>
 
