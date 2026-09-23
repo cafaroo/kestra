@@ -31,7 +31,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Controller("/api/v1/main/ai")
+@Controller("/api/v1/{tenant}/ai")
 @Requires(bean = AiServiceManager.class)
 public class AiController {
     @Inject
