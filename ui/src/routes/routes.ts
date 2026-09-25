@@ -15,6 +15,7 @@ const routes: KestraRouteRecord[] = [
     {name: "root", path: "/", redirect: {name: "home"}, meta: {layout: {template: "<div />"}, anonymous: true}},
 
     {name: "ai",path: "/:tenant?/ai", component: () => import("../components/ai/copilot/CopilotPage.vue")},
+    {name: "studio/tenants", path: "/studio/tenants", component: () => import("../components/studio/Tenants.vue"), meta: {tenantless: true}},
 
     //Dashboards
     {

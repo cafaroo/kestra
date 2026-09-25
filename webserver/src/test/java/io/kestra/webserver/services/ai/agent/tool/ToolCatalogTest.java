@@ -17,6 +17,7 @@ import static org.mockito.Mockito.when;
 class ToolCatalogTest {
     private static final AgentToolPermissionEvaluator ALLOW_ALL = (permission, tenant, principal) -> true;
     private static final AgentToolPermissionEvaluator DENY_ALL = (permission, tenant, principal) -> false;
+    private static final AgentToolAvailabilityPolicy AVAILABLE = (entry, tenant) -> true;
 
     @Test
     void shouldExecuteToolWhenPermissionAllowed() {
@@ -73,7 +74,7 @@ class ToolCatalogTest {
         // how a replacement subclass extends a base tool
         DocsMcpToolProvider docs = mock(DocsMcpToolProvider.class);
         when(docs.tools()).thenReturn(Map.of());
-        ToolCatalog catalog = new ToolCatalog(List.of(new OverridingEchoTool()), List.of(), docs, ALLOW_ALL);
+        ToolCatalog catalog = new ToolCatalog(List.of(new OverridingEchoTool()), List.of(), docs, ALLOW_ALL, AVAILABLE);
         ToolExecutionRequest request = ToolExecutionRequest.builder().id("c1").name("tenant-echo").arguments("{}").build();
 
         // When — the spec is derived from the inherited @Tool method, execution dispatches virtually
@@ -81,6 +82,32 @@ class ToolCatalogTest {
 
         // Then — the subclass override ran
         assertThat(result).isEqualTo("overridden:unit");
+    }
+
+
+    @Test
+    void shouldDenyDispatchWhenToolIsUnavailableInCurrentInstanceMode() {
+        DocsMcpToolProvider docs = mock(DocsMcpToolProvider.class);
+        when(docs.tools()).thenReturn(Map.of());
+        AgentToolAvailabilityPolicy unavailable = (entry, tenant) -> !"tenant-echo".equals(entry.name());
+        ToolCatalog catalog = new ToolCatalog(
+            List.of(new TestTenantEchoTool()),
+            List.of(),
+            docs,
+            ALLOW_ALL,
+            unavailable
+        );
+
+        ToolExecutionRequest request = ToolExecutionRequest.builder()
+            .id("c1")
+            .name("tenant-echo")
+            .arguments("{}")
+            .build();
+
+        assertThatThrownBy(() -> catalog.dispatch(request, AgentCallContext.Context.ofTenant("unit")))
+            .isInstanceOf(ToolUnavailableException.class)
+            .hasMessageContaining("tenant-echo")
+            .hasMessageContaining("unit");
     }
 
     @Test
@@ -123,7 +150,7 @@ class ToolCatalogTest {
     private static ToolCatalog newCatalog(final AgentToolPermissionEvaluator evaluator) {
         DocsMcpToolProvider docs = mock(DocsMcpToolProvider.class);
         when(docs.tools()).thenReturn(Map.of());
-        return new ToolCatalog(List.of(new TestMutateTool(), new TestTenantEchoTool()), List.of(new TestDraftTool()), docs, evaluator);
+        return new ToolCatalog(List.of(new TestMutateTool(), new TestTenantEchoTool()), List.of(new TestDraftTool()), docs, evaluator, AVAILABLE);
     }
 
     private static ToolExecutionRequest request(final String name) {

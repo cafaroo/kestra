@@ -1,5 +1,6 @@
 package io.kestra.webserver.services.ai.agent.tool;
 
+import io.kestra.core.ai.agent.models.AgentToolDomain;
 import io.kestra.core.ai.agent.models.AgentToolFamily;
 import io.kestra.core.ai.agent.models.AgentWritePolicy;
 
@@ -9,6 +10,10 @@ import io.kestra.core.ai.agent.models.AgentWritePolicy;
  * consumes at {@link ToolCatalog#dispatch}.
  */
 public interface AiPlatformTool extends AiTool {
+    default AgentToolDomain domain() {
+        return AgentToolDomain.DEFINITION;
+    }
+
     AgentToolFamily family();
 
     AgentWritePolicy writePolicy();

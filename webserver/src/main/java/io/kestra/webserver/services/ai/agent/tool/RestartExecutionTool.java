@@ -2,6 +2,7 @@ package io.kestra.webserver.services.ai.agent.tool;
 
 import java.util.concurrent.TimeoutException;
 
+import io.kestra.core.ai.agent.models.AgentToolDomain;
 import io.kestra.core.ai.agent.models.AgentToolFamily;
 import io.kestra.core.ai.agent.models.AgentWritePolicy;
 import io.kestra.core.async.AsyncOperationProcessedEvent;
@@ -37,6 +38,11 @@ public class RestartExecutionTool implements AiPlatformTool {
         this.executionCommandQueue = executionCommandQueue;
         this.asyncOperationWaiter = asyncOperationWaiter;
         this.asyncOperationsConfiguration = asyncOperationsConfiguration;
+    }
+
+    @Override
+    public AgentToolDomain domain() {
+        return AgentToolDomain.RUNTIME;
     }
 
     @Override

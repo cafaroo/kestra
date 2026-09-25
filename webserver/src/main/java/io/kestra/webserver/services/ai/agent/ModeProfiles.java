@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import io.kestra.core.ai.agent.models.AgentMode;
 import io.kestra.core.ai.agent.models.AgentPrincipal;
 import io.kestra.core.ai.agent.models.AgentToolFamily;
+import io.kestra.webserver.services.ai.agent.tool.AgentToolAvailabilityPolicy;
 import io.kestra.webserver.services.ai.agent.tool.AgentToolPermissionEvaluator;
 import io.kestra.webserver.services.ai.agent.tool.ToolCatalog;
 
@@ -27,13 +28,18 @@ public class ModeProfiles {
 
     private final ToolCatalog catalog;
     private final AgentToolPermissionEvaluator permissionEvaluator;
+    private final AgentToolAvailabilityPolicy availabilityPolicy;
     private final Map<AgentMode, String> personas;
     private final String commonPrompt;
 
     @Inject
-    public ModeProfiles(final ToolCatalog catalog, final AgentToolPermissionEvaluator permissionEvaluator) {
+    public ModeProfiles(
+        final ToolCatalog catalog,
+        final AgentToolPermissionEvaluator permissionEvaluator,
+        final AgentToolAvailabilityPolicy availabilityPolicy) {
         this.catalog = catalog;
         this.permissionEvaluator = permissionEvaluator;
+        this.availabilityPolicy = availabilityPolicy;
         this.personas = loadPersonas();
         this.commonPrompt = loadCommonPrompt();
     }
@@ -68,6 +74,7 @@ public class ModeProfiles {
         List<ToolCatalog.ToolEntry> allowed = catalog.entries().stream()
             // Authoring tools are non-mutating drafts: advertised in every mode, even Ask.
             .filter(entry -> entry.isAuthoring() || families.contains(entry.family()))
+            .filter(entry -> availabilityPolicy.isAvailable(entry, tenant))
             .filter(
                 entry -> !entry.isPermissionEvaluated()
                     || permissionEvaluator.isAllowed(entry, tenant, principal)

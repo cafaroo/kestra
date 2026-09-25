@@ -1,5 +1,6 @@
 package io.kestra.webserver.services.ai.agent.tool;
 
+import io.kestra.core.ai.agent.models.AgentToolDomain;
 import io.kestra.core.ai.agent.models.ArtefactKind;
 
 /**
@@ -8,6 +9,10 @@ import io.kestra.core.ai.agent.models.ArtefactKind;
  * advertised in every mode. Persisting a draft is a separate, confirmation-gated tool.
  */
 public interface AiAuthoringTool extends AiTool {
+    default AgentToolDomain domain() {
+        return AgentToolDomain.DEFINITION;
+    }
+
     /** The artefact this tool authors. */
     ArtefactKind artefact();
 }

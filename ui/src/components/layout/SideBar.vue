@@ -1,6 +1,7 @@
 <template>
     <KsSideBar id="side-menu" v-bind="$attrs" :class="{'is-collapsed': collapsed}" @contextmenu="onContextMenu">
         <template #header>
+            <slot name="header" />
             <KsIconButton
                 class="header-toggle"
                 :aria-label="$t('toggle menu')"

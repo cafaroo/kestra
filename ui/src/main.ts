@@ -19,6 +19,8 @@ import {useCoreStore} from "./stores/core"
 import {useLayoutStore} from "./stores/layout"
 import {useUnsavedChangesStore} from "./stores/unsavedChanges"
 import {useMiscStore} from "override/stores/misc"
+import {useTenantsStore} from "./stores/tenants"
+import {setActiveTenant} from "override/utils/route"
 import {TASK_ICON_INJECTION_KEY} from "@kestra-io/design-system"
 import TaskIcon from "./components/plugins/TaskIcon.vue"
 import {registerServiceWorker} from "./utils/serviceWorker"
@@ -135,7 +137,40 @@ async function beforeResolve(router: Router, to: RouteLocationNormalized, from: 
         }
 
         // Now that the user is authenticated, load the full instance configuration.
-        await miscStore.loadConfigs()
+        const configs = await miscStore.loadConfigs()
+        const studioEnabled = Boolean((configs as {isStudioEnabled?: boolean}).isStudioEnabled)
+        if (studioEnabled) {
+            const tenantStore = useTenantsStore()
+            await tenantStore.load()
+
+            if (to.meta?.tenantless === true) {
+                return
+            }
+
+            const routeTenant = Array.isArray(to.params.tenant) ? to.params.tenant[0] : to.params.tenant
+            const active = routeTenant ? tenantStore.activeTenants.find((tenant) => tenant.id === routeTenant) : undefined
+
+            if (!active) {
+                const preferred = tenantStore.preferredTenantId()
+                if (!preferred) {
+                    return {name: "studio/tenants"}
+                }
+
+                if (preferred) {
+                    tenantStore.remember(preferred)
+                    setActiveTenant(preferred)
+
+                    const name = typeof to.name === "string" ? to.name : "home"
+                    const safeLists = new Set(["home", "ai", "flows/list", "namespaces/list", "plugins/list"])
+                    return safeLists.has(name)
+                        ? {name, params: {...to.params, tenant: preferred}, query: to.query}
+                        : {name: "home", params: {tenant: preferred}}
+                }
+            } else {
+                tenantStore.remember(active.id)
+                setActiveTenant(active.id)
+            }
+        }
     } catch (error) {
         console.error("Error during authentication check:", error)
         return handleAuthError(to, error)

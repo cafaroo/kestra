@@ -11,6 +11,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.kestra.core.ai.agent.models.AgentToolCall;
+import io.kestra.core.ai.agent.models.AgentToolDomain;
 import io.kestra.core.ai.agent.models.AgentToolFamily;
 import io.kestra.core.ai.agent.models.AgentWritePolicy;
 import io.kestra.core.ai.agent.models.ArtefactDraft;
@@ -59,6 +60,7 @@ public class ToolCatalog {
     private final List<AiAuthoringTool> authoringTools;
     private final DocsMcpToolProvider docsMcpToolProvider;
     private final AgentToolPermissionEvaluator permissionEvaluator;
+    private final AgentToolAvailabilityPolicy availabilityPolicy;
 
     private volatile Map<String, ToolEntry> registry;
 
@@ -67,11 +69,13 @@ public class ToolCatalog {
         final List<AiPlatformTool> platformTools,
         final List<AiAuthoringTool> authoringTools,
         final DocsMcpToolProvider docsMcpToolProvider,
-        final AgentToolPermissionEvaluator permissionEvaluator) {
+        final AgentToolPermissionEvaluator permissionEvaluator,
+        final AgentToolAvailabilityPolicy availabilityPolicy) {
         this.platformTools = platformTools;
         this.authoringTools = authoringTools;
         this.docsMcpToolProvider = docsMcpToolProvider;
         this.permissionEvaluator = permissionEvaluator;
+        this.availabilityPolicy = availabilityPolicy;
     }
 
     public record ToolEntry(
@@ -80,6 +84,7 @@ public class ToolCatalog {
         ToolExecutor executor,
         AgentToolCall.Kind kind,
         @Nullable AgentToolFamily family,
+        AgentToolDomain domain,
         AgentWritePolicy writePolicy,
         @Nullable AiTool tool) {
         /** Docs MCP entries carry no tool bean and are outside permission evaluation. */
@@ -104,18 +109,18 @@ public class ToolCatalog {
             Map<String, ToolEntry> built = new LinkedHashMap<>();
 
             for (AiPlatformTool tool : platformTools) {
-                register(built, tool, AgentToolCall.Kind.PLATFORM, tool.family(), tool.writePolicy());
+                register(built, tool, AgentToolCall.Kind.PLATFORM, tool.family(), tool.domain(), tool.writePolicy());
             }
             // Authoring tools are drafts-only: no family (they escape mode gating) and never confirmed.
             for (AiAuthoringTool tool : authoringTools) {
-                register(built, tool, AgentToolCall.Kind.AUTHORING, null, AgentWritePolicy.AUTO);
+                register(built, tool, AgentToolCall.Kind.AUTHORING, null, tool.domain(), AgentWritePolicy.AUTO);
             }
 
             // Docs MCP tools are public documentation reads: no permission and no tenant scoping.
             docsMcpToolProvider.tools().forEach(
                 (spec, executor) -> built.put(
                     spec.name(), new ToolEntry(
-                        spec.name(), spec, executor, AgentToolCall.Kind.PLATFORM, AgentToolFamily.READ, AgentWritePolicy.AUTO, null
+                        spec.name(), spec, executor, AgentToolCall.Kind.PLATFORM, AgentToolFamily.READ, AgentToolDomain.DOCUMENTATION, AgentWritePolicy.AUTO, null
                     )
                 )
             );
@@ -127,7 +132,7 @@ public class ToolCatalog {
 
     private void register(final Map<String, ToolEntry> built, final AiTool tool,
         final AgentToolCall.Kind kind, @Nullable final AgentToolFamily family,
-        final AgentWritePolicy writePolicy) {
+        final AgentToolDomain domain, final AgentWritePolicy writePolicy) {
         Method method = toolMethod(tool);
 
         boolean hasQueryFilter = Arrays.stream(method.getParameters())
@@ -146,7 +151,7 @@ public class ToolCatalog {
                 .methodToInvoke(method)
                 .propagateToolExecutionExceptions(true)
                 .build();
-        built.put(spec.name(), new ToolEntry(spec.name(), spec, executor, kind, family, writePolicy, tool));
+        built.put(spec.name(), new ToolEntry(spec.name(), spec, executor, kind, family, domain, writePolicy, tool));
     }
 
     public Collection<ToolEntry> entries() {
@@ -174,6 +179,10 @@ public class ToolCatalog {
         ToolEntry entry = registry().get(request.name());
         if (entry == null) {
             throw new IllegalArgumentException("Unknown tool: '%s'".formatted(request.name()));
+        }
+
+        if (!availabilityPolicy.isAvailable(entry, context.tenant())) {
+            throw new ToolUnavailableException(entry.name(), context.tenant());
         }
 
         if (entry.isPermissionEvaluated()) {

@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import io.kestra.core.ai.agent.models.AgentMode;
 import io.kestra.core.ai.agent.models.AgentToolCall;
+import io.kestra.core.ai.agent.models.AgentToolDomain;
 import io.kestra.core.ai.agent.models.AgentToolFamily;
 import io.kestra.core.ai.agent.models.AgentWritePolicy;
 import io.kestra.core.ai.agent.models.ArtefactKind;
+import io.kestra.webserver.services.ai.agent.tool.AgentToolAvailabilityPolicy;
 import io.kestra.webserver.services.ai.agent.tool.AgentToolPermissionEvaluator;
 import io.kestra.webserver.services.ai.agent.tool.AiAuthoringTool;
 import io.kestra.webserver.services.ai.agent.tool.AiPlatformTool;
@@ -23,6 +25,7 @@ import static org.mockito.Mockito.when;
 class ModeProfilesTest {
     private static final String TENANT = "unit";
     private static final AgentToolPermissionEvaluator ALLOW_ALL = (permission, tenant, principal) -> true;
+    private static final AgentToolAvailabilityPolicy AVAILABLE = (entry, tenant) -> true;
 
     private final ModeProfiles modeProfiles = newModeProfiles(List.of(), ALLOW_ALL);
 
@@ -85,23 +88,49 @@ class ModeProfilesTest {
             .containsExactlyInAnyOrder("read-flow", "search-docs");
     }
 
+
+    @Test
+    void shouldNotAdvertiseToolsUnavailableInCurrentInstanceMode() {
+        List<ToolCatalog.ToolEntry> entries = List.of(
+            entry("read-flow", new TestReadTool()),
+            new ToolCatalog.ToolEntry(
+                "read-execution",
+                ToolSpecification.builder().name("read-execution").description("read-execution").build(),
+                (request, memoryId) -> "ok",
+                AgentToolCall.Kind.PLATFORM,
+                AgentToolFamily.READ,
+                AgentToolDomain.RUNTIME,
+                AgentWritePolicy.AUTO,
+                new TestReadTool()
+            )
+        );
+        AgentToolAvailabilityPolicy definitionsOnly = (entry, tenant) -> entry.domain() != AgentToolDomain.RUNTIME;
+        ToolCatalog catalog = mock(ToolCatalog.class);
+        when(catalog.entries()).thenReturn(entries);
+
+        ModeProfiles.ResolvedProfile profile = new ModeProfiles(catalog, ALLOW_ALL, definitionsOnly)
+            .resolve(AgentMode.ASK, TENANT, null);
+
+        assertThat(profile.allowedToolNames()).containsExactly("read-flow");
+    }
+
     private static ModeProfiles newModeProfiles(final List<ToolCatalog.ToolEntry> entries, final AgentToolPermissionEvaluator evaluator) {
         ToolCatalog catalog = mock(ToolCatalog.class);
         when(catalog.entries()).thenReturn(entries);
-        return new ModeProfiles(catalog, evaluator);
+        return new ModeProfiles(catalog, evaluator, AVAILABLE);
     }
 
     private static ToolCatalog.ToolEntry entry(final String name, final AiPlatformTool tool) {
         return new ToolCatalog.ToolEntry(
             name, ToolSpecification.builder().name(name).description(name).build(),
-            (request, memoryId) -> "ok", AgentToolCall.Kind.PLATFORM, AgentToolFamily.READ, AgentWritePolicy.AUTO, tool
+            (request, memoryId) -> "ok", AgentToolCall.Kind.PLATFORM, AgentToolFamily.READ, AgentToolDomain.DEFINITION, AgentWritePolicy.AUTO, tool
         );
     }
 
     private static ToolCatalog.ToolEntry authoringEntry(final String name) {
         return new ToolCatalog.ToolEntry(
             name, ToolSpecification.builder().name(name).description(name).build(),
-            (request, memoryId) -> "ok", AgentToolCall.Kind.AUTHORING, null, AgentWritePolicy.AUTO,
+            (request, memoryId) -> "ok", AgentToolCall.Kind.AUTHORING, null, AgentToolDomain.DEFINITION, AgentWritePolicy.AUTO,
             (AiAuthoringTool) () -> ArtefactKind.FLOW
         );
     }
