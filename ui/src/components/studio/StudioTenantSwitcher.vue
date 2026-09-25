@@ -39,7 +39,7 @@
     import Check from "vue-material-design-icons/Check.vue"
 
     import {useMiscStore} from "override/stores/misc"
-    import {useTenantsStore, type StudioTenant} from "../../stores/tenants"
+    import {useTenantsStore} from "../../stores/tenants"
     import {setActiveTenant} from "override/utils/route"
 
     const route = useRoute()
